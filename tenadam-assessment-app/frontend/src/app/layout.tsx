@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/contexts/AuthContext';
+import Image from 'next/image';
+import TenadamLogo from '@/Tenadam Logo.png';
+import BaldrigeLogo from '@/Baldrige.png';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,11 +28,13 @@ export default function RootLayout({
           <header className="bg-white shadow-md">
             <nav className="container mx-auto px-6 py-3">
               <div className="flex items-center justify-between">
-                <div className="text-xl font-semibold text-gray-700">
-                  <a href="/" className="text-gray-800 hover:text-gray-700">
+                <div className="flex items-center">
+                  <Image src={TenadamLogo} alt="Tenadam Logo" width={100} height={50} />
+                  <a href="/" className="text-gray-800 hover:text-gray-700 text-xl font-semibold text-gray-700 ml-4">
                     Tenadam Training, Consultancy and Research PLC
                   </a>
                 </div>
+                <Image src={BaldrigeLogo} alt="Baldrige Logo" width={300} height={150} />
               </div>
             </nav>
           </header>
