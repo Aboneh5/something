@@ -31,7 +31,7 @@ export default function AnalyticsPage() {
   useEffect(() => {
     const fetchAssessments = async () => {
       try {
-        const res = await fetch("http://localhost:5001/api/admin/analytics", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api'}/admin/analytics`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('sessionToken')}`
           }

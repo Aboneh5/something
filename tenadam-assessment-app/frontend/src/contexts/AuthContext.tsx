@@ -81,7 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const validateCode = async (code: string) => {
     try {
-      const response = await fetch('http://localhost:5001/api/auth/validate-code', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api'}/auth/validate-code`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code }),
@@ -98,7 +98,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const registerUser = async (code: string, fullName: string, email: string, organization: string, phoneNumber: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:5001/api/auth/register', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api'}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, fullName, email, organization, phoneNumber }),

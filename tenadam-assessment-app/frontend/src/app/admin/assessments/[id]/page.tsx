@@ -36,7 +36,7 @@ export default async function AdminAssessmentPage({ params }: PageProps) {
 
   const fetchAssessment = async () => {
     try {
-      const res = await fetch(`http://localhost:5001/api/admin/users/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api'}/admin/users/${id}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('sessionToken')}`
         }
