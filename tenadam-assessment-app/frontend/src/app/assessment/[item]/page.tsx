@@ -5,13 +5,13 @@ import { baldrigeData } from "@/lib/baldrige-data";
 import { notFound, useRouter, useSearchParams } from "next/navigation";
 
 type PageProps = {
-  params: {
+  params: Promise<{
     item: string;
-  };
+  }>;
 };
 
-export default function AssessmentItemPage({ params }: PageProps) {
-  const { item } = params;
+export default async function AssessmentItemPage({ params }: PageProps) {
+  const { item } = await params;
   const router = useRouter();
   const searchParams = useSearchParams();
   const devMode = searchParams.get("devMode") === "true";
@@ -161,7 +161,7 @@ export default function AssessmentItemPage({ params }: PageProps) {
         </div>
       )}
       <h1 className="text-3xl font-bold mb-2">{itemData.title}</h1>
-      {itemData.points && <p className="text-xl text-gray-500 mb-6">({itemData.points} points)</p>}
+      {'points' in itemData && (itemData as any).points && <p className="text-xl text-gray-500 mb-6">({(itemData as any).points} points)</p>}
       
       <div className="space-y-8">
         {itemData.questions.map((q) => (

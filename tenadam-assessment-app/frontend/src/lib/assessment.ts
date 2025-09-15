@@ -1,5 +1,3 @@
-import { AuthService } from './auth';
-
 const API_BASE_URL = 'http://localhost:5001/api';
 
 export interface Category {
@@ -45,11 +43,22 @@ export interface ApiResponse<T = any> {
 
 export class AssessmentService {
   private static getAuthHeaders(): Record<string, string> {
-    const token = AuthService.getStoredToken();
-    return {
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
     };
+
+    // Get session token from localStorage or cookies
+    const sessionToken = localStorage.getItem('sessionToken') || 
+      document.cookie
+        .split('; ')
+        .find(row => row.startsWith('tenadam_session_token='))
+        ?.split('=')[1];
+
+    if (sessionToken) {
+      headers['Authorization'] = `Bearer ${sessionToken}`;
+    }
+
+    return headers;
   }
 
   static async getCategories(): Promise<Category[]> {
@@ -126,7 +135,7 @@ export class AssessmentService {
     responses: Record<string, any>
   ): Promise<void> {
     try {
-      const response = await fetch(`${API_BASE_URL}/assessment/users/${userId}/submit`, {
+      const response = await fetch(`${API_BASE_URL}/assessment/submit`, {
         method: 'POST',
         headers: this.getAuthHeaders(),
         body: JSON.stringify({
@@ -172,13 +181,13 @@ export class AssessmentService {
     response: any
   ): Promise<void> {
     try {
-      const apiResponse = await fetch(`${API_BASE_URL}/assessment/responses`, {
+      const apiResponse = await fetch(`${API_BASE_URL}/assessment/response`, {
         method: 'POST',
         headers: this.getAuthHeaders(),
         body: JSON.stringify({
-          userId,
           questionId,
-          response,
+          responseText: response,
+          timeSpent: 0
         }),
       });
 

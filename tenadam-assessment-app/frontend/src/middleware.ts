@@ -1,26 +1,23 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
 
 export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/admin')) {
-    // In a real app, you'd get the user ID from the session
-    // For now, we'll just check if there's any admin user in the DB
-    // This is NOT secure and only for development purposes
-    const adminUser = await prisma.user.findFirst({
-      where: { isAdmin: true },
-    });
+    // Check for admin session token in cookies
+    const sessionToken = request.cookies.get('tenadam_session_token')?.value;
 
-    if (!adminUser) {
-      return new NextResponse('You are not authorized to view this page', { status: 403 });
+    if (!sessionToken) {
+      // Redirect to auth page if no session token found
+      return NextResponse.redirect(new URL('/auth', request.url));
     }
+
+    // In production, you would validate the token with the backend here
+    // For now, we'll assume the token is valid if it exists
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: '/admin/:path*',
+  matcher: ['/admin/:path*'],
 };

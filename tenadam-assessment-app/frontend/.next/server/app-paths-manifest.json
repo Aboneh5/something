@@ -1,4 +1,11 @@
 {
+  "/_not-found/page": "app/_not-found/page.js",
+  "/auth/page": "app/auth/page.js",
   "/page": "app/page.js",
-  "/auth/page": "app/auth/page.js"
+  "/auth/login/page": "app/auth/login/page.js",
+  "/assessment/page": "app/assessment/page.js",
+  "/assessment/entry/page": "app/assessment/entry/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/admin/organizations/page": "app/admin/organizations/page.js",
+  "/admin/assessments/page": "app/admin/assessments/page.js"
 }

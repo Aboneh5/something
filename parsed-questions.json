@@ -1,0 +1,460 @@
+{
+  "categories": {
+    "1": {
+      "name": "Leadership",
+      "subcategories": {
+        "1.1": {
+          "name": "Senior Leadership",
+          "questions": [
+            {
+              "code": "1.1a(1)",
+              "text": "How do senior leaders set and deploy your organization's vision and values?"
+            },
+            {
+              "code": "1.1a(2)",
+              "text": "How do senior leaders deploy the vision and values through your leadership system, to the workforce, suppliers, partners, customers, and stakeholders?"
+            },
+            {
+              "code": "1.1a(3)",
+              "text": "How do senior leaders' personal actions reflect a commitment to those values?"
+            },
+            {
+              "code": "1.1b(1)",
+              "text": "How do senior leaders' actions demonstrate commitment to legal and ethical behavior?"
+            },
+            {
+              "code": "1.1b(2)",
+              "text": "How do senior leaders communicate with and engage workforce, customers, and stakeholders?"
+            },
+            {
+              "code": "1.1b(3)",
+              "text": "How do senior leaders create an environment for success now and in the future?"
+            },
+            {
+              "code": "1.1b(4)",
+              "text": "How do senior leaders create and balance value for customers, workforce, suppliers, partners, and stakeholders?"
+            },
+            {
+              "code": "1.1b(5)",
+              "text": "How do senior leaders evaluate organizational performance and use results to improve leadership, governance, and communication?"
+            }
+          ]
+        },
+        "1.2": {
+          "name": "Governance and Societal Contributions",
+          "questions": [
+            {
+              "code": "1.2a(1)",
+              "text": "How does your governance system review and achieve accountability for management's actions?"
+            },
+            {
+              "code": "1.2a(2)",
+              "text": "How does your governance system evaluate senior leaders' performance and compensation?"
+            },
+            {
+              "code": "1.2a(3)",
+              "text": "How does your governance system ensure independence and accountability?"
+            },
+            {
+              "code": "1.2a(4)",
+              "text": "How does your governance system protect stakeholder interests?"
+            },
+            {
+              "code": "1.2b(1)",
+              "text": "How do you address adverse impacts on society of your products, operations, and workforce?"
+            },
+            {
+              "code": "1.2b(2)",
+              "text": "How do you promote and ensure ethical behavior throughout the organization?"
+            },
+            {
+              "code": "1.2b(3)",
+              "text": "How do you monitor and respond to breaches of compliance?"
+            },
+            {
+              "code": "1.2c(1)",
+              "text": "How do you consider societal well-being and benefit in strategy and daily operations?"
+            },
+            {
+              "code": "1.2c(2)",
+              "text": "How do you actively support and strengthen key communities?"
+            }
+          ]
+        }
+      }
+    },
+    "2": {
+      "name": "Strategy",
+      "subcategories": {
+        "2.1": {
+          "name": "Strategy Development",
+          "questions": [
+            {
+              "code": "2.1a(1)",
+              "text": "How do you conduct your strategic planning?"
+            },
+            {
+              "code": "2.1a(2)",
+              "text": "How do you consider key elements of risk, resilience, financial, societal, ethical, and regulatory factors in developing strategy?"
+            },
+            {
+              "code": "2.1a(3)",
+              "text": "How do you consider innovation opportunities in strategy development?"
+            },
+            {
+              "code": "2.1a(4)",
+              "text": "How do you ensure that your strategy development process addresses your organization's core competencies, strategic challenges, and advantages?"
+            },
+            {
+              "code": "2.1b(1)",
+              "text": "How do you collect and analyze relevant data and information to identify potential blind spots in your strategic planning?"
+            },
+            {
+              "code": "2.1b(2)",
+              "text": "How do you decide which key potential opportunities for innovation are intelligent risks worth pursuing?"
+            },
+            {
+              "code": "2.1b(3)",
+              "text": "How do you decide which key strategic opportunities are worth pursuing?"
+            }
+          ]
+        },
+        "2.2": {
+          "name": "Strategy Implementation",
+          "questions": [
+            {
+              "code": "2.2a(1)",
+              "text": "What are your key short- and longer-term action plans?"
+            },
+            {
+              "code": "2.2a(2)",
+              "text": "How do you deploy your action plans throughout the organization?"
+            },
+            {
+              "code": "2.2a(3)",
+              "text": "How do you ensure that financial and other resources are available to support action plan implementation?"
+            },
+            {
+              "code": "2.2b(1)",
+              "text": "What are your key performance measures for tracking progress on your action plans?"
+            },
+            {
+              "code": "2.2b(2)",
+              "text": "How do you ensure that your performance measurement system provides timely, actionable data?"
+            },
+            {
+              "code": "2.2c(1)",
+              "text": "How do you project future performance of key measures and indicators?"
+            },
+            {
+              "code": "2.2c(2)",
+              "text": "How does your projected performance compare with that of competitors, benchmarks, or relevant comparisons?"
+            }
+          ]
+        }
+      }
+    },
+    "3": {
+      "name": "Customers",
+      "subcategories": {
+        "3.1": {
+          "name": "Customer Expectations",
+          "questions": [
+            {
+              "code": "3.1a(1)",
+              "text": "How do you listen to current and potential customers to obtain actionable information?"
+            },
+            {
+              "code": "3.1a(2)",
+              "text": "How do you use listening methods to capture actionable information on changing customer needs and expectations?"
+            },
+            {
+              "code": "3.1b(1)",
+              "text": "How do you determine customer groups and market segments?"
+            },
+            {
+              "code": "3.1b(2)",
+              "text": "How do you determine product offerings to support customer groups and market segments?"
+            }
+          ]
+        },
+        "3.2": {
+          "name": "Customer Engagement",
+          "questions": [
+            {
+              "code": "3.2a(1)",
+              "text": "How do you build and manage customer relationships?"
+            },
+            {
+              "code": "3.2a(2)",
+              "text": "How do you enable customers to seek information and support?"
+            },
+            {
+              "code": "3.2a(3)",
+              "text": "How do you determine customer satisfaction, dissatisfaction, and engagement?"
+            },
+            {
+              "code": "3.2b(1)",
+              "text": "How do you manage customer complaints?"
+            },
+            {
+              "code": "3.2b(2)",
+              "text": "How do you use complaint information to support customer engagement and organizational learning?"
+            },
+            {
+              "code": "3.2c(1)",
+              "text": "How do you build relationships with customers to retain them, meet their requirements, and exceed their expectations?"
+            },
+            {
+              "code": "3.2c(2)",
+              "text": "How do you increase customer loyalty and positive referral?"
+            }
+          ]
+        }
+      }
+    },
+    "4": {
+      "name": "Measurement, Analysis, and Knowledge Management",
+      "subcategories": {
+        "4.1": {
+          "name": "Measurement, Analysis, and Improvement of Organizational Performance",
+          "questions": [
+            {
+              "code": "4.1a(1)",
+              "text": "How do you select, collect, align, and integrate data and information to use in tracking daily operations and overall performance?"
+            },
+            {
+              "code": "4.1a(2)",
+              "text": "How do you use data and information to support organizational decision making and innovation?"
+            },
+            {
+              "code": "4.1b(1)",
+              "text": "How do you review your organization's performance and capabilities?"
+            },
+            {
+              "code": "4.1b(2)",
+              "text": "How do you use performance review findings to identify priorities for continuous improvement and innovation?"
+            }
+          ]
+        },
+        "4.2": {
+          "name": "Information and Knowledge Management",
+          "questions": [
+            {
+              "code": "4.2a(1)",
+              "text": "How do you ensure the quality of your data and information?"
+            },
+            {
+              "code": "4.2a(2)",
+              "text": "How do you ensure the availability of data and information to workforce, suppliers, partners, collaborators, and customers, as appropriate?"
+            },
+            {
+              "code": "4.2b(1)",
+              "text": "How do you build and manage organizational knowledge?"
+            },
+            {
+              "code": "4.2b(2)",
+              "text": "How do you share best practices across organizational units?"
+            },
+            {
+              "code": "4.2b(3)",
+              "text": "How do you ensure that your workforce, suppliers, partners, and collaborators have the knowledge needed to accomplish their work?"
+            }
+          ]
+        }
+      }
+    },
+    "5": {
+      "name": "Workforce",
+      "subcategories": {
+        "5.1": {
+          "name": "Workforce Environment",
+          "questions": [
+            {
+              "code": "5.1a(1)",
+              "text": "How do you assess workforce capability and capacity needs?"
+            },
+            {
+              "code": "5.1a(2)",
+              "text": "How do you recruit, hire, place, and retain new workforce members?"
+            },
+            {
+              "code": "5.1a(3)",
+              "text": "How do you organize and manage your workforce?"
+            },
+            {
+              "code": "5.1b(1)",
+              "text": "How do you ensure workplace health, security, and accessibility?"
+            },
+            {
+              "code": "5.1b(2)",
+              "text": "How do you support your workforce via services, benefits, and policies?"
+            }
+          ]
+        },
+        "5.2": {
+          "name": "Workforce Engagement",
+          "questions": [
+            {
+              "code": "5.2a(1)",
+              "text": "How do you determine key drivers of workforce engagement?"
+            },
+            {
+              "code": "5.2a(2)",
+              "text": "How do you foster a culture conducive to high performance?"
+            },
+            {
+              "code": "5.2a(3)",
+              "text": "How do you assess workforce engagement?"
+            },
+            {
+              "code": "5.2b(1)",
+              "text": "How do you use workforce climate and engagement data?"
+            },
+            {
+              "code": "5.2b(2)",
+              "text": "How do you manage workforce performance to achieve high performance?"
+            }
+          ]
+        }
+      }
+    },
+    "6": {
+      "name": "Operations",
+      "subcategories": {
+        "6.1": {
+          "name": "Work Processes",
+          "questions": [
+            {
+              "code": "6.1a(1)",
+              "text": "How do you determine your organization's core competencies?"
+            },
+            {
+              "code": "6.1a(2)",
+              "text": "How do you design and innovate your work processes?"
+            },
+            {
+              "code": "6.1b(1)",
+              "text": "How do you determine your key work processes?"
+            },
+            {
+              "code": "6.1b(2)",
+              "text": "How do you manage your key work processes to deliver customer value?"
+            }
+          ]
+        },
+        "6.2": {
+          "name": "Operational Effectiveness",
+          "questions": [
+            {
+              "code": "6.2a(1)",
+              "text": "How do you control the overall costs of your operations?"
+            },
+            {
+              "code": "6.2a(2)",
+              "text": "How do you achieve productivity and cycle time performance?"
+            },
+            {
+              "code": "6.2b(1)",
+              "text": "How do you ensure safety across your operations?"
+            },
+            {
+              "code": "6.2b(2)",
+              "text": "How do you ensure organizational resilience and business continuity?"
+            }
+          ]
+        }
+      }
+    },
+    "7": {
+      "name": "Results",
+      "subcategories": {
+        "7.1": {
+          "name": "Product and Process Results",
+          "questions": [
+            {
+              "code": "7.1a(1)",
+              "text": "What are your current levels and trends in key measures or indicators of product and process performance?"
+            },
+            {
+              "code": "7.1a(2)",
+              "text": "What are your performance results for key work process effectiveness and efficiency?"
+            },
+            {
+              "code": "7.1a(3)",
+              "text": "What are your results for delivering customer value?"
+            }
+          ]
+        },
+        "7.2": {
+          "name": "Customer Results",
+          "questions": [
+            {
+              "code": "7.2a(1)",
+              "text": "What are your current levels and trends in key measures of customer satisfaction and dissatisfaction?"
+            },
+            {
+              "code": "7.2a(2)",
+              "text": "What are your results for customer engagement, loyalty, and retention?"
+            }
+          ]
+        },
+        "7.3": {
+          "name": "Workforce Results",
+          "questions": [
+            {
+              "code": "7.3a(1)",
+              "text": "What are your results for workforce capability and capacity?"
+            },
+            {
+              "code": "7.3a(2)",
+              "text": "What are your results for workforce engagement and satisfaction?"
+            },
+            {
+              "code": "7.3a(3)",
+              "text": "What are your results for workforce development and learning?"
+            }
+          ]
+        },
+        "7.4": {
+          "name": "Leadership and Governance Results",
+          "questions": [
+            {
+              "code": "7.4a(1)",
+              "text": "What are your results for senior leaders' communication and actions to build and support the organization's vision and values?"
+            },
+            {
+              "code": "7.4a(2)",
+              "text": "What are your results for governance accountability?"
+            },
+            {
+              "code": "7.4a(3)",
+              "text": "What are your results for legal, ethical, and regulatory compliance?"
+            },
+            {
+              "code": "7.4a(4)",
+              "text": "What are your results for societal responsibilities and community support?"
+            }
+          ]
+        },
+        "7.5": {
+          "name": "Financial, Market, and Strategy Results",
+          "questions": [
+            {
+              "code": "7.5a(1)",
+              "text": "What are your current levels and trends in key financial performance measures?"
+            },
+            {
+              "code": "7.5a(2)",
+              "text": "What are your results for key measures of marketplace performance, including market share or position?"
+            },
+            {
+              "code": "7.5a(3)",
+              "text": "What are your results for strategic objectives and action plan accomplishment?"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

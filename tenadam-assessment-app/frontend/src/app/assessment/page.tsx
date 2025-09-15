@@ -2,23 +2,24 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
 import AssessmentFlow from '@/components/assessment/AssessmentFlow';
 import { AssessmentService, Category } from '@/lib/assessment';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function AssessmentPage() {
-  const router = useRouter();
-  const { isAuthenticated, isLoading, user } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [error, setError] = useState('');
+  const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
+    // Check authentication first
     if (!isLoading && !isAuthenticated) {
-      router.push('/auth');
+      router.push('/assessment/entry');
       return;
     }
-
+    
     if (isAuthenticated) {
       loadCategories();
     }
@@ -36,16 +37,34 @@ export default function AssessmentPage() {
     }
   };
 
+  // Show loading while checking authentication or loading categories
   if (isLoading || isLoadingCategories) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="animate-spin mx-auto h-12 w-12 border-4 border-blue-600 border-t-transparent rounded-full mb-4"></div>
           <h2 className="text-xl font-semibold text-gray-900">
-            Loading Assessment
+            {isLoading ? 'Verifying Access' : 'Loading Assessment'}
           </h2>
           <p className="text-gray-600 mt-2">
-            Preparing your Baldrige Excellence Framework Assessment...
+            {isLoading ? 'Please wait while we verify your access...' : 'Preparing your Baldrige Excellence Framework Assessment...'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // If not authenticated, this should redirect, but show loading as fallback
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin mx-auto h-12 w-12 border-4 border-blue-600 border-t-transparent rounded-full mb-4"></div>
+          <h2 className="text-xl font-semibold text-gray-900">
+            Redirecting...
+          </h2>
+          <p className="text-gray-600 mt-2">
+            Please wait while we redirect you to the access page...
           </p>
         </div>
       </div>
@@ -88,10 +107,6 @@ export default function AssessmentPage() {
     );
   }
 
-  if (!isAuthenticated) {
-    return null; // Will redirect to auth
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -100,7 +115,7 @@ export default function AssessmentPage() {
             Baldrige Excellence Framework Assessment
           </h1>
           <p className="mt-2 text-gray-600">
-            Welcome, {user?.fullName}! Complete all categories to finish your assessment.
+            Complete all categories to finish your assessment.
           </p>
         </div>
 

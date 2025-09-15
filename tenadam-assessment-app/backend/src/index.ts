@@ -6,6 +6,7 @@ import { PrismaClient } from '@prisma/client';
 // Import routes
 import authRoutes from './routes/auth';
 import assessmentRoutes from './routes/assessment';
+import adminRoutes from './routes/admin';
 
 dotenv.config();
 
@@ -13,7 +14,12 @@ const app = express();
 const prisma = new PrismaClient();
 const port = process.env.PORT || 5001;
 
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004', 'http://127.0.0.1:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Health check endpoint
@@ -29,6 +35,7 @@ app.get('/health', (req, res) => {
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/assessment', assessmentRoutes);
+app.use('/api/admin', adminRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {
@@ -39,6 +46,7 @@ app.use('*', (req, res) => {
       auth: [
         'POST /api/auth/validate-code',
         'POST /api/auth/register',
+        'POST /api/auth/admin-login',
         'POST /api/auth/logout',
         'GET /api/auth/session'
       ],

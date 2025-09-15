@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import SubcategorySection from './SubcategorySection';
-import { Category, Subcategory, Question } from '@/lib/assessment';
+import { Category, Subcategory, Question, AssessmentService } from '@/lib/assessment';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface CategoryAssessmentProps {
   category: Category;
@@ -22,6 +23,7 @@ export default function CategoryAssessment({
   const [responses, setResponses] = useState<Record<string, any>>(initialResponses);
   const [currentSubcategoryIndex, setCurrentSubcategoryIndex] = useState(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const { user } = useAuth();
 
   const currentSubcategory = category.subcategories[currentSubcategoryIndex];
   const totalSubcategories = category.subcategories.length;
@@ -30,7 +32,8 @@ export default function CategoryAssessment({
     setResponses(initialResponses);
   }, [initialResponses]);
 
-  const handleResponseChange = (questionId: string, value: any) => {
+  const handleResponseChange = async (questionId: string, value: any) => {
+    // Update local state immediately for responsive UI
     setResponses(prev => ({
       ...prev,
       [questionId]: value
@@ -40,6 +43,17 @@ export default function CategoryAssessment({
     if (errors[questionId]) {
       setErrors(prev => ({ ...prev, [questionId]: '' }));
     }
+
+    // Save response to database if value is not empty
+    if (user && value && typeof value === 'string' && value.trim() !== '') {
+      try {
+        await AssessmentService.saveResponse(user.id, questionId, value.trim());
+        console.log(`Saved response for question ${questionId}`);
+      } catch (error) {
+        console.error('Failed to save response:', error);
+        // Could add a toast notification here for better UX
+      }
+    }
   };
 
   const validateCurrentSubcategory = () => {
@@ -47,7 +61,9 @@ export default function CategoryAssessment({
     let isValid = true;
 
     (currentSubcategory.questions || []).forEach(question => {
-      if (question.required && !responses[question.id]) {
+      const response = responses[question.id];
+      const isEmpty = !response || (typeof response === 'string' && response.trim() === '');
+      if (question.required && isEmpty) {
         newErrors[question.id] = 'This question is required';
         isValid = false;
       }
@@ -82,7 +98,9 @@ export default function CategoryAssessment({
 
     category.subcategories.forEach(subcategory => {
       (subcategory.questions || []).forEach(question => {
-        if (question.required && !responses[question.id]) {
+        const response = responses[question.id];
+        const isEmpty = !response || (typeof response === 'string' && response.trim() === '');
+        if (question.required && isEmpty) {
           allErrors[question.id] = 'This question is required';
           allValid = false;
         }
@@ -107,7 +125,11 @@ export default function CategoryAssessment({
 
   const getCompletedSubcategoriesCount = () => {
     return category.subcategories.reduce((count, subcategory) => {
-            const allAnswered = (subcategory.questions || []).every(q => !q.required || responses[q.id]);
+            const allAnswered = (subcategory.questions || []).every(q => {
+        if (!q.required) return true;
+        const response = responses[q.id];
+        return response && !(typeof response === 'string' && response.trim() === '');
+      });
       return count + (allAnswered ? 1 : 0);
     }, 0);
   };
@@ -148,7 +170,11 @@ export default function CategoryAssessment({
                 index === currentSubcategoryIndex
                   ? 'bg-blue-500'
                   : index < currentSubcategoryIndex ||
-                    (category.subcategories[index].questions || []).every(q => !q.required || responses[q.id])
+                    (category.subcategories[index].questions || []).every(q => {
+                      if (!q.required) return true;
+                      const response = responses[q.id];
+                      return response && !(typeof response === 'string' && response.trim() === '');
+                    })
                   ? 'bg-green-500'
                   : 'bg-gray-200'
               }`}

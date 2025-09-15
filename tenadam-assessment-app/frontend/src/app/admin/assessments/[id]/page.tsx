@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { baldrigeData } from "@/lib/baldrige-data";
 import Tabs from "@/components/admin/Tabs";
 import ResponsesView from "@/components/admin/ResponsesView";
+import jsPDF from 'jspdf';
 
 const ADLI_TOOLTIP = "Approach, Deployment, Learning, Integration";
 const LETCI_TOOLTIP = "Levels, Trends, Comparisons, Integration";
@@ -19,13 +20,13 @@ const itemWeights: { [key: string]: number } = {
 };
 
 type PageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
-export default function AdminAssessmentPage({ params }: PageProps) {
-  const { id } = params;
+export default async function AdminAssessmentPage({ params }: PageProps) {
+  const { id } = await params;
   const [assessment, setAssessment] = useState<any>(null);
   const [scores, setScores] = useState<{ [key: string]: number | null }>({});
 
@@ -35,15 +36,22 @@ export default function AdminAssessmentPage({ params }: PageProps) {
 
   const fetchAssessment = async () => {
     try {
-      const res = await fetch(`/api/admin/assessments/${id}`);
+      const res = await fetch(`http://localhost:5001/api/admin/users/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('sessionToken')}`
+        }
+      });
       if (res.ok) {
-        const data = await res.json();
-        setAssessment(data);
-        if (data.scores.length > 0) {
-          const initialScores = { ...data.scores[0] };
-          delete initialScores.id;
-          delete initialScores.assessmentId;
-          setScores(initialScores);
+        const result = await res.json();
+        if (result.success) {
+          const data = result.data;
+          setAssessment(data);
+          if (data.scores.length > 0) {
+            const initialScores = { ...data.scores[0] };
+            delete initialScores.id;
+            delete initialScores.assessmentId;
+            setScores(initialScores);
+          }
         }
       }
     } catch (error) {
@@ -171,15 +179,7 @@ export default function AdminAssessmentPage({ params }: PageProps) {
     </div>
   );
 
-  const tabs = [
-    { label: 'Responses', content: <ResponsesView assessment={assessment} /> },
-    { label: 'Scoring', content: scoringContent },
-    import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-
-// ... (rest of the imports)
-
-// ... (rest of the component)
+  
 
   const handleGeneratePdf = () => {
     const doc = new jsPDF();

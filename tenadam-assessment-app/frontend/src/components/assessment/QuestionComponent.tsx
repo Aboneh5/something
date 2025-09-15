@@ -82,9 +82,17 @@ export default function QuestionComponent({
                     value={option}
                     checked={value === option}
                     onChange={(e) => onChange(e.target.value)}
-                    className="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500 mb-2"
+                    className={`h-5 w-5 text-blue-600 focus:ring-blue-500 mb-2 ${
+                      value === option
+                        ? 'border-blue-600 bg-blue-50'
+                        : 'border-gray-300'
+                    }`}
                   />
-                  <span className="text-sm text-gray-700 group-hover:text-gray-900 font-medium">
+                  <span className={`text-sm font-medium ${
+                    value === option
+                      ? 'text-black font-bold'
+                      : 'text-gray-700 group-hover:text-gray-900'
+                  }`}>
                     {option}
                   </span>
                 </label>
@@ -111,9 +119,9 @@ export default function QuestionComponent({
           <textarea
             value={value || ''}
             onChange={(e) => onChange(e.target.value)}
-            placeholder="Enter your detailed response..."
-            rows={4}
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical ${
+            placeholder="Please provide a detailed response explaining your organization's approach, processes, and practices for this area..."
+            rows={6}
+            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical text-gray-900 ${
               error ? 'border-red-300' : 'border-gray-300'
             }`}
           />
@@ -166,11 +174,6 @@ export default function QuestionComponent({
         <h4 className="text-lg font-medium text-gray-900 leading-relaxed">
           {question.text}
         </h4>
-        {question.required && (
-          <span className="ml-2 text-red-500 text-sm font-medium flex-shrink-0">
-            Required
-          </span>
-        )}
       </div>
 
       {/* Input Component */}
