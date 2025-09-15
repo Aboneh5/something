@@ -224,7 +224,7 @@ router.get('/assessments', authenticateUser, async (req: Request, res: Response)
               }
             }
           },
-          userProgress: true
+          progress: true
         },
         orderBy: {
           createdAt: 'desc',
@@ -251,13 +251,13 @@ router.get('/assessments', authenticateUser, async (req: Request, res: Response)
           organization: user.organization,
           phoneNumber: user.phoneNumber
         },
-        status: user.userProgress?.isCompleted ? 'COMPLETED' : 'IN_PROGRESS',
+        status: user.progress?.isCompleted ? 'COMPLETED' : 'IN_PROGRESS',
         completionPercentage,
         totalResponses: user.responses.length,
         createdAt: user.createdAt,
-        updatedAt: user.userProgress?.updatedAt || user.updatedAt,
+        updatedAt: user.progress?.updatedAt || user.updatedAt,
         responses: user.responses,
-        progress: user.userProgress
+        progress: user.progress
       };
     });
 
@@ -421,7 +421,7 @@ router.get('/users/:userId', authenticateUser, async (req: Request, res: Respons
             }
           }
         },
-        userProgress: true
+          progress: true
       }
     });
 
@@ -473,11 +473,11 @@ router.get('/users/:userId', authenticateUser, async (req: Request, res: Respons
       },
       scores: scores,
       totalResponses: user.responses.length,
-      isCompleted: user.userProgress?.isCompleted || false,
-      completedAt: user.userProgress?.completedAt,
+      isCompleted: user.progress?.isCompleted || false,
+      completedAt: user.progress?.completedAt,
       createdAt: user.createdAt,
       responses: user.responses,
-      progress: user.userProgress
+      progress: user.progress
     };
 
     return res.status(200).json({
@@ -515,7 +515,7 @@ router.get('/analytics', authenticateUser, async (req: Request, res: Response) =
             }
           }
         },
-        userProgress: true
+          progress: true
       }
     });
 
@@ -573,8 +573,8 @@ router.get('/analytics', authenticateUser, async (req: Request, res: Response) =
         },
         scores: scores,
         totalResponses: user.responses.length,
-        isCompleted: user.userProgress?.isCompleted || false,
-        completedAt: user.userProgress?.completedAt,
+        isCompleted: user.progress?.isCompleted || false,
+        completedAt: user.progress?.completedAt,
         createdAt: user.createdAt
       };
     });

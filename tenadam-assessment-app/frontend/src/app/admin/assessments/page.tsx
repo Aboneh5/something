@@ -66,7 +66,7 @@ function AdminAssessmentsContent() {
         ...(filters.status && { status: filters.status })
       });
 
-      const res = await fetch(`http://localhost:5001/api/admin/assessments?${params}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api'}/admin/assessments?${params}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('sessionToken')}`
         }
