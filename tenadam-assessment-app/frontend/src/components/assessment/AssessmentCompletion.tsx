@@ -92,16 +92,6 @@ export default function AssessmentCompletion({ user }: AssessmentCompletionProps
           </p>
         </div>
 
-        {/* Next Steps */}
-        <div className="bg-yellow-50 rounded-lg p-6 border-l-4 border-yellow-500">
-          <h4 className="text-lg font-semibold text-gray-900 mb-2">What's Next?</h4>
-          <ul className="text-gray-700 text-sm text-left space-y-1">
-            <li>• Your responses are being processed by our assessment team</li>
-            <li>• A detailed report will be prepared within 5-7 business days</li>
-            <li>• You will receive the results via email at {user?.email}</li>
-            <li>• Follow-up consultation may be scheduled if requested</li>
-          </ul>
-        </div>
 
         {/* Action Button */}
         <div className="mt-8">

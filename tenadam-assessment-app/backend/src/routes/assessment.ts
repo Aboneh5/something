@@ -41,8 +41,8 @@ const authenticateUser = async (req: Request, res: Response, next: any) => {
 };
 
 // GET /api/assessment/categories
-// Get all categories with subcategories for navigation
-router.get('/categories', authenticateUser, async (req: Request, res: Response) => {
+// Get all categories with subcategories for navigation (public endpoint)
+router.get('/categories', async (req: Request, res: Response) => {
   try {
     const categories = await prisma.category.findMany({
       orderBy: { displayOrder: 'asc' },
@@ -52,28 +52,21 @@ router.get('/categories', authenticateUser, async (req: Request, res: Response) 
           include: {
             questions: {
               orderBy: { orderIndex: 'asc' },
-              select: { id: true }
+              include: {
+                options: {
+                  orderBy: { orderIndex: 'asc' }
+                }
+              }
             }
           }
         }
       }
     });
 
-    // Get user's responses to track progress
-    const user = (req as any).user;
-    const userProgress = await prisma.userProgress.findUnique({
-        where: { userId: user.id },
-    });
-
-    const answeredQuestionIds = new Set(userProgress ? Object.keys(userProgress.responses) : []);
-
-    // Add progress information to categories
-    const categoriesWithProgress = categories.map(category => {
-      const subcategoriesWithProgress = category.subcategories.map(subcategory => {
+    // Format categories for public access (without user progress)
+    const formattedCategories = categories.map(category => {
+      const subcategoriesFormatted = category.subcategories.map(subcategory => {
         const totalQuestions = subcategory.questions.length;
-        const answeredQuestions = subcategory.questions.filter(q =>
-          answeredQuestionIds.has(q.id)
-        ).length;
 
         return {
           id: subcategory.id,
@@ -81,16 +74,22 @@ router.get('/categories', authenticateUser, async (req: Request, res: Response) 
           displayOrder: subcategory.displayOrder,
           description: subcategory.description,
           totalQuestions,
-          answeredQuestions,
-          isComplete: totalQuestions > 0 && answeredQuestions === totalQuestions
+          answeredQuestions: 0, // No user progress for public access
+          isComplete: false, // No user progress for public access
+          questions: subcategory.questions.map(question => ({
+            id: question.id,
+            text: question.questionText,
+            type: 'textarea', // All Baldrige questions are written response questions
+            required: true, // All questions are required in Baldrige assessment
+            subcategoryId: question.subcategoryId,
+            displayOrder: question.orderIndex,
+            options: [] // No options needed for text responses
+          }))
         };
       });
 
-      const totalQuestions = subcategoriesWithProgress.reduce(
+      const totalQuestions = subcategoriesFormatted.reduce(
         (sum, sub) => sum + sub.totalQuestions, 0
-      );
-      const answeredQuestions = subcategoriesWithProgress.reduce(
-        (sum, sub) => sum + sub.answeredQuestions, 0
       );
 
       return {
@@ -99,15 +98,15 @@ router.get('/categories', authenticateUser, async (req: Request, res: Response) 
         displayOrder: category.displayOrder,
         description: category.description,
         totalQuestions,
-        answeredQuestions,
-        isComplete: totalQuestions > 0 && answeredQuestions === totalQuestions,
-        subcategories: subcategoriesWithProgress
+        answeredQuestions: 0, // No user progress for public access
+        isComplete: false, // No user progress for public access
+        subcategories: subcategoriesFormatted
       };
     });
 
     return res.status(200).json({
       success: true,
-      data: categoriesWithProgress
+      data: formattedCategories
     });
 
   } catch (error) {
@@ -291,6 +290,97 @@ router.post('/response', authenticateUser, async (req: Request, res: Response) =
   }
 });
 
+// POST /api/assessment/responses
+// Save or update multiple responses at once (bulk operation)
+router.post('/responses', authenticateUser, async (req: Request, res: Response) => {
+  try {
+    const { assessmentId, responses } = req.body;
+    const user = (req as any).user;
+
+    if (!responses || typeof responses !== 'object') {
+      return res.status(400).json({
+        success: false,
+        message: 'Responses object is required'
+      });
+    }
+
+    const savedResponses = [];
+    const errors = [];
+
+    // Process each response
+    for (const [itemCode, responseText] of Object.entries(responses)) {
+      if (!responseText || typeof responseText !== 'string') {
+        continue; // Skip empty responses
+      }
+
+      try {
+        // Find the question by itemCode (assuming itemCode maps to question text or we have a mapping)
+        // For now, we'll create a simple mapping or use the itemCode directly
+        const question = await prisma.question.findFirst({
+          where: {
+            questionText: {
+              contains: itemCode
+            }
+          }
+        });
+
+        if (!question) {
+          errors.push(`Question not found for itemCode: ${itemCode}`);
+          continue;
+        }
+
+        // Save the response
+        const response = await prisma.response.upsert({
+          where: {
+            userId_questionId: {
+              userId: user.id,
+              questionId: question.id
+            }
+          },
+          update: {
+            responseText: responseText.trim(),
+            updatedAt: new Date()
+          },
+          create: {
+            userId: user.id,
+            questionId: question.id,
+            responseText: responseText.trim(),
+            points: 0, // Will be calculated later during scoring
+            timeSpent: 0
+          }
+        });
+
+        savedResponses.push({
+          itemCode,
+          questionId: question.id,
+          responseId: response.id,
+          responseText: response.responseText
+        });
+
+      } catch (error) {
+        console.error(`Error saving response for ${itemCode}:`, error);
+        errors.push(`Failed to save response for ${itemCode}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `Saved ${savedResponses.length} responses successfully`,
+      data: {
+        savedResponses,
+        errors: errors.length > 0 ? errors : undefined
+      }
+    });
+
+  } catch (error) {
+    console.error('Error saving bulk responses:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+});
+
 // POST /api/assessment/progress/:userId
 // Save assessment progress for a user
 router.post('/progress/:userId', authenticateUser, async (req: Request, res: Response) => {
@@ -380,16 +470,18 @@ router.post('/submit', authenticateUser, async (req: Request, res: Response) => 
   try {
     const user = (req as any).user;
 
-    // Check if all questions are answered
+    // Check if all questions are answered - require complete assessment
     const totalQuestions = await prisma.question.count();
     const answeredQuestions = await prisma.response.count({
       where: { userId: user.id }
     });
 
+    console.log(`User ${user.id} attempting submission: ${answeredQuestions}/${totalQuestions} questions answered`);
+
     if (answeredQuestions < totalQuestions) {
       return res.status(400).json({
         success: false,
-        message: `Assessment incomplete. ${answeredQuestions}/${totalQuestions} questions answered.`,
+        message: `Assessment incomplete. Please answer all questions before submitting. ${answeredQuestions}/${totalQuestions} questions completed.`,
         data: {
           answeredQuestions,
           totalQuestions,
@@ -416,15 +508,16 @@ router.post('/submit', authenticateUser, async (req: Request, res: Response) => 
 
     return res.status(200).json({
       success: true,
-      message: 'Assessment submitted successfully!',
+      message: 'Thank you for taking the Tenadam Assessment! Your responses have been successfully submitted.',
       data: {
         submissionId: `TENADAM-${Date.now()}`, // Simple submission ID
         submittedAt: new Date(),
         totalScore,
         maxPossibleScore,
-        percentageScore,
+        percentageScore: answeredQuestions > 0 ? percentageScore : 0,
         totalQuestions,
         answeredQuestions,
+        completionRate: Math.round((answeredQuestions / totalQuestions) * 100),
         user: {
           id: user.id,
           fullName: user.fullName,

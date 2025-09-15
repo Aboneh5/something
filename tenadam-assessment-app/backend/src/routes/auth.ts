@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -60,6 +61,105 @@ router.post('/validate-code', async (req: Request, res: Response) => {
 
   } catch (error) {
     console.error('Error validating access code:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+});
+
+// POST /api/auth/admin-login
+// Admin login with email and password
+router.post('/admin-login', async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+
+    // Validate required fields
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email and password are required'
+      });
+    }
+
+    // Find user by email
+    const user = await prisma.user.findUnique({
+      where: { email }
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password'
+      });
+    }
+
+    // Check if user has a password (admin users only)
+    if (!user.passwordHash) {
+      return res.status(401).json({
+        success: false,
+        message: 'This account does not support password login'
+      });
+    }
+
+    // Verify password
+    const isValidPassword = await bcrypt.compare(password, user.passwordHash);
+    if (!isValidPassword) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password'
+      });
+    }
+
+    // Check if user is admin
+    if (!user.isAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied: Admin privileges required'
+      });
+    }
+
+    // Generate session token
+    const sessionToken = Buffer.from(`${user.id}:${Date.now()}`).toString('base64');
+
+    // Deactivate any existing sessions for this user
+    await prisma.session.updateMany({
+      where: { userId: user.id },
+      data: { isActive: false }
+    });
+
+    // Create new session
+    const session = await prisma.session.create({
+      data: {
+        userId: user.id,
+        token: sessionToken,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+      }
+    });
+
+    // Update last login
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { lastLogin: new Date() }
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Login successful',
+      user: {
+        id: user.id,
+        fullName: user.fullName,
+        email: user.email,
+        organization: user.organization,
+        phoneNumber: user.phoneNumber,
+        isAdmin: user.isAdmin
+      },
+      sessionToken: session.token,
+      expiresAt: session.expiresAt
+    });
+
+  } catch (error) {
+    console.error('Error during login:', error);
     return res.status(500).json({
       success: false,
       message: 'Internal server error'
@@ -267,7 +367,8 @@ router.get('/session', async (req: Request, res: Response) => {
           fullName: session.user.fullName,
           email: session.user.email,
           organization: session.user.organization,
-          phoneNumber: session.user.phoneNumber
+          phoneNumber: session.user.phoneNumber,
+          isAdmin: session.user.isAdmin
         },
         sessionToken: session.token,
         expiresAt: session.expiresAt
