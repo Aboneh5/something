@@ -8,18 +8,18 @@ import RegistrationForm from '@/components/auth/RegistrationForm';
 
 type Step = 'code' | 'register' | 'complete';
 
-export default function AssessmentEntryPage() {
+export default function BaldrigeEntryPage() {
   const [currentStep, setCurrentStep] = useState<Step>('code');
   const [accessCode, setAccessCode] = useState('');
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuth();
 
-  // Don't redirect authenticated users immediately - let them choose
-  // useEffect(() => {
-  //   if (!isLoading && isAuthenticated) {
-  //     router.push('/assessment');
-  //   }
-  // }, [isAuthenticated, isLoading, router]);
+  // Redirect to Baldrige assessment if user is already authenticated
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      router.push('/baldrige');
+    }
+  }, [isAuthenticated, isLoading, router]);
 
   // Show loading while checking authentication
   if (isLoading) {
@@ -35,40 +35,14 @@ export default function AssessmentEntryPage() {
     );
   }
 
-  // If authenticated, show option to go to admin or start new assessment
+  // If authenticated, show loading while redirecting
   if (isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-2 sm:p-4">
         <div className="max-w-sm w-full bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
-          <div className="text-center mb-6">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-              Welcome Back!
-            </h1>
-            <p className="text-sm sm:text-base text-gray-600">
-              You're already logged in. Choose an option:
-            </p>
-          </div>
-          
-          <div className="space-y-3">
-            <button
-              onClick={() => router.push('/admin')}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-semibold transition-colors duration-200"
-            >
-              Go to Admin Dashboard
-            </button>
-            
-            <button
-              onClick={() => {
-                // Clear session and start fresh
-                localStorage.removeItem('user');
-                localStorage.removeItem('sessionToken');
-                document.cookie = 'tenadam_session_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-                window.location.reload();
-              }}
-              className="w-full bg-gray-600 hover:bg-gray-700 text-white py-3 px-4 rounded-lg font-semibold transition-colors duration-200"
-            >
-              Start New Assessment
-            </button>
+          <div className="text-center">
+            <div className="animate-spin mx-auto h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full mb-4"></div>
+            <p className="text-sm text-gray-600">Redirecting to Baldrige assessment...</p>
           </div>
         </div>
       </div>
@@ -82,9 +56,9 @@ export default function AssessmentEntryPage() {
 
   const handleRegistrationComplete = () => {
     setCurrentStep('complete');
-    // Redirect to assessment after a short delay
+    // Redirect to Baldrige assessment after a short delay
     setTimeout(() => {
-      router.push('/assessment');
+      router.push('/baldrige');
     }, 2000);
   };
 
@@ -140,7 +114,7 @@ export default function AssessmentEntryPage() {
               Registration Complete!
             </h2>
             <p className="text-gray-600 mb-4">
-              Redirecting you to the assessment...
+              Redirecting you to the Baldrige assessment...
             </p>
             <div className="animate-spin mx-auto h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
           </div>
@@ -149,6 +123,15 @@ export default function AssessmentEntryPage() {
         <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-gray-50 rounded-md">
           <p className="text-xs sm:text-sm text-gray-600 font-medium mb-1 sm:mb-2">Sample Access Code:</p>
           <p className="text-xs sm:text-sm text-gray-500 font-mono break-all">TENADAM1301SRS</p>
+        </div>
+
+        <div className="mt-4 text-center">
+          <a
+            href="/"
+            className="text-sm text-blue-600 hover:text-blue-700 underline"
+          >
+            Back to Home
+          </a>
         </div>
       </div>
     </div>

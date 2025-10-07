@@ -5,6 +5,7 @@ import { baldrigeData } from "@/lib/baldrige-data";
 import Tabs from "@/components/admin/Tabs";
 import ResponsesView from "@/components/admin/ResponsesView";
 import jsPDF from 'jspdf';
+import { useParams } from "next/navigation";
 
 const ADLI_TOOLTIP = "Approach, Deployment, Learning, Integration";
 const LETCI_TOOLTIP = "Levels, Trends, Comparisons, Integration";
@@ -19,14 +20,9 @@ const itemWeights: { [key: string]: number } = {
   "7.1": 120, "7.2": 80, "7.3": 80, "7.4": 80, "7.5": 90,
 };
 
-type PageProps = {
-  params: Promise<{
-    id: string;
-  }>;
-};
-
-export default async function AdminAssessmentPage({ params }: PageProps) {
-  const { id } = await params;
+export default function AdminAssessmentPage() {
+  const params = useParams();
+  const id = params.id as string;
   const [assessment, setAssessment] = useState<any>(null);
   const [scores, setScores] = useState<{ [key: string]: number | null }>({});
 

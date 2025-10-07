@@ -1,4 +1,4 @@
-// File: C:\Users\Lu\prog\bridge\something\tenadam-assessment-app\frontend\src\app\layout.tsx
+// File: C:\Users\lenovo\Documents\tenadam assessment\ocai-hub\Tenadam Assessment App\tenadam-assessment-app\frontend\src\app\layout.tsx
 import * as entry from '../../../src/app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

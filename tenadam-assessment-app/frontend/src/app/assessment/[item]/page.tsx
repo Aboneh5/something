@@ -2,16 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { baldrigeData } from "@/lib/baldrige-data";
-import { notFound, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, useParams } from "next/navigation";
 
-type PageProps = {
-  params: Promise<{
-    item: string;
-  }>;
-};
-
-export default async function AssessmentItemPage({ params }: PageProps) {
-  const { item } = await params;
+export default function AssessmentItemPage() {
+  const params = useParams();
+  const item = params.item as string;
   const router = useRouter();
   const searchParams = useSearchParams();
   const devMode = searchParams.get("devMode") === "true";
@@ -67,7 +62,20 @@ export default async function AssessmentItemPage({ params }: PageProps) {
   }, [isDirty]);
 
   if (!itemData) {
-    return notFound();
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Assessment Item Not Found</h1>
+          <p className="text-gray-600 mb-6">The requested assessment item could not be found.</p>
+          <button 
+            onClick={() => router.push('/assessment')}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          >
+            Return to Assessment
+          </button>
+        </div>
+      </div>
+    );
   }
 
   const isSubmitted = assessmentStatus === 'submitted';
